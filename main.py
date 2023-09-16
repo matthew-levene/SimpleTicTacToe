@@ -11,13 +11,7 @@
 #  > The player or the computer gets three horizontal or vertical squares in a row
 #  > The board is filled and the result is a draw
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from board import Board
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    board = Board()
