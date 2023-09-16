@@ -1,8 +1,15 @@
-# This is a sample Python script.
+# Tic-Tac-Toe Game
+#
+# Tic-Tac-Toe is a board game that consists of nine squares.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+# In each round, the player will pick a square to place their marker
+# In each alternate round, the computer will pick a free square
+#
+# The player may choose if they wish to use Xs or Os
+#
+# The game will end if:
+#  > The player or the computer gets three horizontal or vertical squares in a row
+#  > The board is filled and the result is a draw
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
