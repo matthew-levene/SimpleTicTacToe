@@ -5,21 +5,31 @@ from functools import partial
 class Board:
 
     def __init__(self):
+        self.round_count = 1
         self._draw_board(3, 3)
 
+    def _get_marker_style(self):
+        if self.round_count % 2:
+            style = ttk.Style()
+            style.configure("RW.TButton", foreground="red", background="white")
+            return "X", "RW.TButton"
+        else:
+            style = ttk.Style()
+            style.configure("BW.TButton", foreground="blue", background="white")
+            return "0", "BW.TButton"
+
     def _update_board(self, frame, row, column):
-
-        style = ttk.Style()
-        style.configure("RW.TButton", foreground="red", background="white")
-
+        marker, style = self._get_marker_style()
         self._board[row].insert(column, "X")
         button = ttk.Button(
             frame,
-            style="RW.TButton",
-            text="X",
+            style=style,
+            text=marker,
             padding=35
         )
         button.grid(row=row, column=column)
+
+        self.round_count += 1
 
     def _draw_board(self, rows, columns):
         self.columns = columns
