@@ -20,7 +20,7 @@ class Board:
 
     def _update_board(self, frame, row, column):
         marker, style = self._get_marker_style()
-        self._board[row].insert(column, "X")
+        self._board[row].insert(column, marker)
         button = ttk.Button(
             frame,
             style=style,
