@@ -16,7 +16,7 @@ class Board:
         else:
             style = ttk.Style()
             style.configure("BW.TButton", foreground="blue", background="white")
-            return "0", "BW.TButton"
+            return "O", "BW.TButton"
 
     def _update_board(self, frame, row, column):
         marker, style = self._get_marker_style()
