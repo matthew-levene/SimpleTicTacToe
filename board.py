@@ -22,8 +22,6 @@ class Board:
         return self.player_marker == "x"
 
     def _get_marker_style(self):
-        print(self.round_count % 2 == 0)
-
         if self._no_marker_selected():
             self.player_marker = self.player_marker.upper()
         if self.round_count % 2 == 0:
@@ -85,10 +83,8 @@ class Board:
         if self.player_marker != "O" and self.player_marker != "X":
             if self._no_marker_selected():
                 self.player_marker = marker_selection.get()
-                print("Marker chosen for first time, setting as {}".format(self.player_marker))
             else:
                 self.player_marker = marker_selection.get()
-                print("PLAYER CHOSEN MARKER {}".format(marker_selection.get()))
 
     def _draw_board(self, window, rows, columns):
         self.columns = columns
