@@ -1,5 +1,5 @@
-from tkinter import ttk, Tk, StringVar
 from functools import partial
+from tkinter import ttk, Tk, StringVar
 
 
 class Board:
@@ -8,15 +8,37 @@ class Board:
         self.round_count = 1
         self.player_marker = "x"
 
-        window = Tk()
-        window.title("Tic-Tac-Toe")
-        window.geometry("500x460+750+200")
+        self._window = Tk()
+        self._window.title("Tic-Tac-Toe")
+        self._window.geometry("500x460+750+200")
 
-        self._draw_choice_input(window)
-        self._draw_board(window, 3, 3)
+        self._draw_choice_input(self._window)
+        self._show_opponent_turn(self._window)
+        self._draw_board(self._window, 3, 3)
 
         # Init the main looper and show the window
-        window.mainloop()
+        self._window.mainloop()
+
+    def _show_opponent_turn(self, frame=None):
+        def is_player_turn(round_count):
+            return round_count % 2 == 0
+
+        if is_player_turn(self.round_count):
+            style = ttk.Style()
+            style.configure("RW.TButton", foreground="red", background="white")
+        else:
+            style = ttk.Style()
+            style.configure("BW.TButton", foreground="blue", background="white")
+
+        opponent_turn_label = ttk.Label(
+            master=frame if frame is not None else self._window,
+            text="{} Turn".format(" Player" if self.round_count % 2 == 0 else "Computer"),
+            padding=10,
+            style="RW.TButton" if is_player_turn(self.round_count) else "BW.TButton",
+            width=20
+        )
+
+        opponent_turn_label.grid(row=2, column=0)
 
     def _no_marker_selected(self):
         return self.player_marker == "x"
@@ -45,6 +67,8 @@ class Board:
         button.grid(row=row, column=column)
 
         self.round_count += 1
+
+        self._show_opponent_turn()
 
     def _draw_choice_input(self, window):
         marker_selection = StringVar()
