@@ -1,5 +1,25 @@
+import sys
 from functools import partial
 from tkinter import ttk, Tk, StringVar
+from itertools import permutations
+
+
+horizontal_win_conditions = [
+    [(0, 0), (0, 1), (0, 2)],
+    [(1, 0), (1, 1), (1, 2)],
+    [(2, 0), (2, 1), (2, 2)]
+]
+
+vertical_win_conditions = [
+    [(0, 0), (1, 0), (2, 0)],
+    [(0, 1), (1, 1), (2, 1)],
+    [(0, 2), (1, 2), (2, 2)]
+]
+
+diagonal_win_conditions = [
+    [(0, 0), (1, 1), (2, 2)],
+    [(2, 0), (1, 1), (0, 2)]
+]
 
 
 class Board:
@@ -15,9 +35,48 @@ class Board:
         self._draw_choice_input(self._window)
         self._show_opponent_turn(self._window)
         self._draw_board(self._window, 3, 3)
+        self.zero_zero_guard = False
+        self.trap_coords = ()
+        self.player_win_tuple_list = []
+        self.computer_win_tuple_list = []
 
         # Init the main looper and show the window
         self._window.mainloop()
+
+    def _check_win_condition(self, win_condition, selected_row, selected_column):
+        for win_tuple_list in win_condition:
+            for win_tuple in win_tuple_list:
+                row, column = win_tuple
+
+                try:
+                    if self._board[row][column] == self.player_marker:
+                        self.player_win_tuple_list.append((row, column))
+                    else:
+                        if (row == 0 and column == 0) and not self.zero_zero_guard:
+                            row = selected_row
+                            column = selected_column
+                            self.computer_win_tuple_list.append((row, column))
+                        else:
+                            self.computer_win_tuple_list.append((row, column))
+                except IndexError:
+                    continue
+
+        player_perms = permutations(self.player_win_tuple_list, 3)
+        for perm in list(player_perms):
+            for condition in win_condition:
+                if list(perm) == condition:
+                    print("Player Won!")
+                    sys.exit()
+
+        computer_perms = permutations(list(set(self.computer_win_tuple_list)), 3)
+        for perm in list(computer_perms):
+            for condition in win_condition:
+                if list(perm) == condition:
+                    print("Computer Won!")
+                    sys.exit()
+
+        self.computer_win_tuple_list = []
+        self.player_win_tuple_list = []
 
     def _show_opponent_turn(self, frame=None):
         def is_player_turn(round_count):
@@ -58,6 +117,7 @@ class Board:
     def _update_board(self, frame, row, column):
         marker, style = self._get_marker_style()
         self._board[row].insert(column, marker)
+        self.zero_zero_guard = True if row == 0 and column == 0 else False
         button = ttk.Button(
             frame,
             style=style,
@@ -65,6 +125,10 @@ class Board:
             padding=35
         )
         button.grid(row=row, column=column)
+
+        self._check_win_condition(horizontal_win_conditions, row, column)
+        self._check_win_condition(vertical_win_conditions, row, column)
+        self._check_win_condition(diagonal_win_conditions, row, column)
 
         self.round_count += 1
 
